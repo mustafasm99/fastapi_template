@@ -1,21 +1,8 @@
-from sqlmodel import DateTime, Field, Column, Integer , SQLModel
+from sqlmodel import SQLModel, Field
 from datetime import datetime
-
+from typing import Optional
 
 class DbBaseModel(SQLModel):
-    id: int = Field(
-        sa_column=Column(Integer, primary_key=True, index=True, autoincrement=True)
-    )
-    create_time: datetime = Field(
-        sa_column=Column(
-            DateTime,
-            default=datetime.utcnow,
-        )
-    )
-    update_time: datetime = Field(
-            sa_column=Column(
-               DateTime,
-               default=datetime.utcnow,
-               onupdate=datetime.utcnow,
-            )
-      )
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    create_time: datetime = Field(default_factory=datetime.utcnow)
+    update_time: datetime = Field(default_factory=datetime.utcnow)
