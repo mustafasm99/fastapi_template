@@ -6,11 +6,12 @@ from sqlmodel import SQLModel
 from dataclasses import dataclass
 from pydantic import BaseModel
 from abc import abstractmethod
-from app.models.user_model import User
+from app.models.users.user import User
 
 
 _ModelType = TypeVar("_ModelType", bound=SQLModel)
 _CreateType = TypeVar("_CreateType", bound=BaseModel)
+
 
 @dataclass
 class BaseRouter(Generic[_ModelType, _CreateType]):
@@ -18,9 +19,9 @@ class BaseRouter(Generic[_ModelType, _CreateType]):
         self,
         tag: list[Union[str, Enum]] | None,
         controller: BaseController,
-        model: Type[_ModelType],       # Explicitly pass model type
-        create_type: Type[_CreateType], # Explicitly pass create_type
-        auth_object:User|None = None,
+        model: Type[_ModelType],  # Explicitly pass model type
+        create_type: Type[_CreateType],  # Explicitly pass create_type
+        auth_object: User | None = None,
         prefix: str = "/",
     ):
         self.router = APIRouter(prefix=prefix, tags=tag)
@@ -72,6 +73,7 @@ class BaseRouter(Generic[_ModelType, _CreateType]):
             dependencies=self.auth_object,
             status_code=status.HTTP_204_NO_CONTENT,
         )
+
     # @abstractmethod
     async def read_all(self):
         return await self.controller.read()
@@ -85,9 +87,11 @@ class BaseRouter(Generic[_ModelType, _CreateType]):
                 detail=f"Item with id {id} not found",
             )
         return data
-    
+
     @abstractmethod
-    async def create(self, data:_CreateType = Body(...)):  # Explicitly type as _CreateType
+    async def create(
+        self, data: _CreateType = Body(...)
+    ):  # Explicitly type as _CreateType
         postedData = self.model(**data.model_dump())
         return await self.controller.create(postedData)
 
@@ -100,5 +104,5 @@ class BaseRouter(Generic[_ModelType, _CreateType]):
     async def delete(self, id: int):
         if await self.controller.delete(id):
             return HTTPException(status_code=status.HTTP_204_NO_CONTENT)
-        else:    
+        else:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
