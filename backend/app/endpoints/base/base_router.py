@@ -1,13 +1,13 @@
-from fastapi import HTTPException, status, APIRouter, Body
+from fastapi import HTTPException, status, APIRouter, Body , Query
 from typing import Generic, TypeVar, Type, List, Union
 from enum import Enum
-from app.controller.base_controller import BaseController
+from app.controller.base_controller import BaseController # typing: ignore
 from sqlmodel import SQLModel
 from dataclasses import dataclass
 from pydantic import BaseModel
 from abc import abstractmethod
-from app.models.users.user import User
-
+from app.models.users.user import User # typing: ignore
+from app.endpoints.base.pagination import PaginationInput # typing: ignore
 
 _ModelType = TypeVar("_ModelType", bound=SQLModel)
 _CreateType = TypeVar("_CreateType", bound=BaseModel)
@@ -34,7 +34,7 @@ class BaseRouter(Generic[_ModelType, _CreateType]):
     def setup_routes(self):
         # Register routes with dynamically inferred create_type for request body
         self.router.add_api_route(
-            path="/",
+            path="",
             endpoint=self.read_all,
             methods=["GET"],
             response_model=List[self.model],
@@ -48,7 +48,7 @@ class BaseRouter(Generic[_ModelType, _CreateType]):
             dependencies=self.auth_object,
         )
         self.router.add_api_route(
-            path="/",
+            path="",
             endpoint=self.create,
             methods=["POST"],
             response_model=self.model,
@@ -75,8 +75,8 @@ class BaseRouter(Generic[_ModelType, _CreateType]):
         )
 
     # @abstractmethod
-    async def read_all(self):
-        return await self.controller.read()
+    async def read_all(self , pagination: PaginationInput = Query(...)):
+        return await self.controller.read(page=pagination.page, per_page=pagination.per_page)
 
     # @abstractmethod
     async def get_one(self, id: int):

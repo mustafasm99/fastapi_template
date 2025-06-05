@@ -1,9 +1,14 @@
-from app.db.depend import get_session
+from app.db.depend import get_session  # type: ignore
 from typing import Generic, TypeVar, Type
 from sqlmodel import SQLModel, select
 from dataclasses import dataclass
 from fastapi import HTTPException, status
 from datetime import datetime
+from app.endpoints.base.pagination import (  # typing: ignore
+    PaginationResponse,
+)  # typing: ignore
+from sqlmodel import func, Session
+from app.logger.logger import logger  # type: ignore
 
 T = TypeVar("T", bound=SQLModel)
 
@@ -12,12 +17,14 @@ T = TypeVar("T", bound=SQLModel)
 class BaseController(Generic[T]):
     model: Type[T]
 
-    def __init__(self, model: Type[T]):
+    def __init__(self, model: Type[T], session: Session = next(get_session())):
         self.session = next(get_session())
         self.model = model
+        logger.info(f"Initialized BaseController with model: {self.model.__name__}")
 
     async def get(self, id):
         try:
+            logger.info(f"Fetching {self.model.__name__} with ID: {id}")
             query = select(self.model).where(self.model.id == id)
             return self.session.exec(query).first()
         except Exception:
@@ -25,6 +32,7 @@ class BaseController(Generic[T]):
 
     async def create(self, data: T) -> bool | T:
         try:
+            logger.info(f"Fetching {self.model.__name__} with ID: {id}")
             self.session.add(data)
             self.session.commit()
             self.session.refresh(
@@ -40,6 +48,7 @@ class BaseController(Generic[T]):
 
     async def update(self, id: int, data: T) -> bool | T:
         # Fetch the existing object
+        logger.info(f"Updating {self.model.__name__} with ID: {id}")
         query = select(self.model).where(self.model.id == id)
         old_object = self.session.exec(query).first()
 
@@ -64,6 +73,7 @@ class BaseController(Generic[T]):
 
     async def delete(self, id):
         try:
+            logger.info(f"Deleting {self.model.__name__} with ID: {id}")
             query = select(self.model).where(self.model.id == id)
             object = self.session.exec(query).first()
             self.session.delete(object)
@@ -73,6 +83,20 @@ class BaseController(Generic[T]):
             self.session.rollback()
             return False
 
-    async def read(self) -> list[T]:
+    async def read(self, page: int, per_page: int) -> PaginationResponse[T]:
+        logger.info(
+            f"Reading {self.model.__name__} with pagination: page={page}, per_page={per_page}"
+        )
+        offset = (page - 1) * per_page
         query = select(self.model)
-        return list(self.session.exec(query).all())
+        total = self.session.exec(select(func.count()).select_from(query)).one()
+        data = self.session.exec(query.offset(offset).limit(per_page)).all()
+        return PaginationResponse[T](
+            data=data,
+            total=total,
+            page=page,
+            per_page=per_page,
+            total_pages=(
+                total // per_page + (1 if total % per_page > 0 else 0)
+            ),  # Calculate total pages
+        )

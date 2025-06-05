@@ -1,13 +1,18 @@
-from fastapi import Response, status
 from pydantic import BaseModel
 
 
 class MessageResponse(BaseModel):
+    """
+    Represents a response message structure for API communication.
+
+    Args:
+        BaseModel: Inherits from Pydantic's BaseModel for data validation.
+
+    Returns:
+        An instance containing response message data.
+    """
+
     message: str
 
-    def __init__(self, **data):
-        super().__init__(**data) 
-
-    def __call__(self, response: Response):
-        response.status_code = status.HTTP_200_OK
+    def __call__(self):
         return {"message": self.message}
