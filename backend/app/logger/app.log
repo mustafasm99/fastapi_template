@@ -1,0 +1,16 @@
+2025-06-06 01:10:38,807 - INFO - app.logger.logger - Project settings loaded: your_project_name_here - ProjectSettings.development
+2025-06-06 01:10:38,807 - INFO - app.logger.logger - Database URL: sqlite:///C:\project\fastapi_template\backend\app\data.sqlite
+2025-06-06 01:10:38,807 - INFO - app.logger.logger - API Version: 1.0.0
+2025-06-06 01:10:38,807 - INFO - app.logger.logger - Media Path: media
+2025-06-06 01:10:38,807 - INFO - app.logger.logger - Max Image Size: 5242880 bytes
+2025-06-06 01:10:38,807 - INFO - app.logger.logger - API Key: your_api_key_here
+2025-06-06 01:10:38,807 - INFO - app.logger.logger - API Secret: your_api_secret_here
+2025-06-06 01:10:38,807 - INFO - app.logger.logger - Database Type: sqlite
+2025-06-06 01:10:39,692 - INFO - app.logger.logger - Project settings loaded: your_project_name_here - ProjectSettings.development
+2025-06-06 01:10:39,692 - INFO - app.logger.logger - Database URL: sqlite:///C:\project\fastapi_template\backend\app\data.sqlite
+2025-06-06 01:10:39,692 - INFO - app.logger.logger - API Version: 1.0.0
+2025-06-06 01:10:39,692 - INFO - app.logger.logger - Media Path: media
+2025-06-06 01:10:39,692 - INFO - app.logger.logger - Max Image Size: 5242880 bytes
+2025-06-06 01:10:39,692 - INFO - app.logger.logger - API Key: your_api_key_here
+2025-06-06 01:10:39,692 - INFO - app.logger.logger - API Secret: your_api_secret_here
+2025-06-06 01:10:39,692 - INFO - app.logger.logger - Database Type: sqlite
