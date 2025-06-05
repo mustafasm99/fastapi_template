@@ -24,12 +24,14 @@ This project is a clean and reusable **FastAPI template** that provides a solid 
 app/
 ├── controller/
 │   └── base_controller.py
-├── router/
+├── endpoints/
 │   └── base_router.py
 ├── models/
 │   └── your_models.py
 ├── db/
 │   └── depend.py
+├── core/
+│     └── settings.py
 main.py
 ```
 
@@ -40,8 +42,8 @@ main.py
 1. Clone the repo
 
 ```bash
-git clone https://github.com/yourusername/fastapi-base-template.git
-cd fastapi-base-template
+git clone https://github.com/mustafasm99/fastapi_template.git
+cd fastapi_template
 ```
 
 2. Create and activate a virtual environment
@@ -125,9 +127,9 @@ Automatically registers CRUD endpoints:
 
 | Method | Path         | Description        |
 |--------|--------------|--------------------|
-| GET    | `/`          | Get all items      |
+| GET    | ``           | Get all items      |
 | GET    | `/{id}`      | Get item by ID     |
-| POST   | `/`          | Create new item    |
+| POST   | ``           | Create new item    |
 | PUT    | `/{id}`      | Update item by ID  |
 | DELETE | `/{id}`      | Delete item by ID  |
 
