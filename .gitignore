@@ -1,3 +1,5 @@
-.mypy_cache/
 *.pyc
-__pycache__/
+backend/.env
+backend/env/
+backend/app/logger/app.log
+
